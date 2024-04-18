@@ -9,9 +9,11 @@ export class UserServiceImpl implements UserService{
     
     userRepository: UserRepository;
 
+
     constructor(userRepository:UserRepository){
         this.userRepository = userRepository
     }
+
     async login(email: string, password: string): Promise<User | undefined> {
         const user = await this.userRepository.login(email, password)
         if (user == undefined){
@@ -19,6 +21,7 @@ export class UserServiceImpl implements UserService{
         }
         return user
     }
+
     async register(name: string, email: string, password: string): Promise<string | undefined> {
         const user = await this.userRepository.getUser(email)
         
@@ -28,6 +31,5 @@ export class UserServiceImpl implements UserService{
         return this.userRepository.register(name, email, password)
     }
 
-    
 
 }

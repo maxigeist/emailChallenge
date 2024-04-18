@@ -1,14 +1,10 @@
 import { UserController } from "./interfaces/user.controller";
 import { UserService } from "./interfaces/user.service";
-import { Request, Response } from "express";
-import { UserServiceImpl } from "./user.service";
-import { UserRepositoryImpl } from "./user.repository";
+import e, {Request, Response} from "express";
 import { EmailExistsError } from "../error/email.exists";
-import { JsonWebTokenError, Jwt } from "jsonwebtoken";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-import jwt from 'jsonwebtoken'
 import { NotValidCredentials } from "../error/not.valid.credentials";
+import {generateToken} from "../token/token";
+
 
 export class UserControllerImpl implements UserController{
     
@@ -22,8 +18,10 @@ export class UserControllerImpl implements UserController{
         try{
             const {email, password} = req.body
             const user = await this.userService.login(email, password)
-            const token = jwt.sign({ _id: user?.id, email: user?.email },"YOUR_SECRET",{expiresIn: "1d",});
-            res.status(200).json({status: 200, success: true,message: "login success",token: token});
+            if (user){
+                const token = generateToken(user.id, user.email, user.password)
+                res.status(200).json({status: 200, success: true,message: "login success",token: token});
+            }
         }
         catch(error){
             if (error instanceof NotValidCredentials){
@@ -50,5 +48,4 @@ export class UserControllerImpl implements UserController{
         }
 
     }
-
 }
