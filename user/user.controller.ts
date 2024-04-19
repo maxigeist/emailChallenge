@@ -4,14 +4,17 @@ import e, {Request, Response} from "express";
 import { EmailExistsError } from "../error/email.exists";
 import { NotValidCredentials } from "../error/not.valid.credentials";
 import {generateToken} from "../token/token";
+import {ExtendedError} from "../error/interface/extended.error";
 
 
 export class UserControllerImpl implements UserController{
     
     userService: UserService;
+    commonError: ExtendedError
     
-    constructor(userService:UserService){
+    constructor(userService:UserService, commonError:ExtendedError){
         this.userService = userService
+        this.commonError = commonError
     }
 
     async login(req: Request, res: Response) {
@@ -40,10 +43,10 @@ export class UserControllerImpl implements UserController{
             res.send(response);
         } catch (error) {
             if (error instanceof EmailExistsError){
-                res.status(403).send(error.message)
+                res.status(error.getStatus()).json(error.getAsJson())
             }
             else{
-                res.status(500).send("Internal server error");
+                res.status(this.commonError.getStatus()).json(this.commonError.getAsJson());
             }
         }
 

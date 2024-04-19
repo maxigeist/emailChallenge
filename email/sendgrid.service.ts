@@ -7,14 +7,13 @@ import {Email} from "./type/email.type";
 export class SendGridService implements EmailService{
     emailRepository: EmailRepository;
 
-
     constructor(emailRepository: EmailRepository) {
         this.emailRepository = emailRepository
     }
 
 
 
-    async sendEmail(senderEmail:string,forwardEmail:string, subject:string, body:string): Promise<boolean> {
+    async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
         const email:Email = {
             to:forwardEmail,
             from: senderEmail,
@@ -28,12 +27,13 @@ export class SendGridService implements EmailService{
                     console.log(response[0].headers)
                     return true
                 })
-            await this.emailRepository.register(senderEmail, forwardEmail, subject, body)
+            await this.emailRepository.register(senderId, forwardEmail, subject, body)
             return true
             }
             catch (error){
                 console.error(error)
+                return false
+
             }
-            return true
         }
 }

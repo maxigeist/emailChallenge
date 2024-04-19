@@ -1,5 +1,10 @@
 import {Admin, Email, User} from "@prisma/client";
+import { Prisma } from '@prisma/client'
 
+
+type UserWithPosts = Prisma.UserGetPayload<{
+    include: { emails: true }
+}>
 
 export interface AdminRepository{
 
@@ -8,6 +13,6 @@ export interface AdminRepository{
 
     getAllUsers():Promise<User[]>
 
-    getUserMails(email:string):Promise<Email[]>
+    getUserMailsByDate(date:Date, email:string):Promise<UserWithPosts[]>
 
 }

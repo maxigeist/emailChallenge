@@ -8,6 +8,6 @@ export interface EmailService{
     emailRepository:EmailRepository
 
 
-    sendEmail(senderEmail:string,forwardEmail:string, subject:string, body:string):Promise<boolean>
+    sendEmail(senderEmail:string,senderId:number, forwardEmail:string, subject:string, body:string):Promise<boolean>
 
 }

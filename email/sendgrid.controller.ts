@@ -20,7 +20,7 @@ export class SendGridController implements EmailController{
 
         try{
             const {forwardEmail, subject, body} = req.body
-            this.emailService.sendEmail(tokenUnwrap.email, forwardEmail, subject, body)
+            this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
             res.status(200).send("The email was sent correctly")
             }
         catch (error){

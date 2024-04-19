@@ -1,12 +1,12 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class AdminNotExists implements Error, ExtendedError{
+export class InternalServer implements Error{
     message: string;
     name: string;
 
     constructor() {
-        this.name = "Admin does not exist"
-        this.message = "This credentials don't match a valid admin"
+        this.name = "Internal Server Error"
+        this.message = "There has been an internal server error"
     }
 
     getAsJson(){
@@ -18,7 +18,7 @@ export class AdminNotExists implements Error, ExtendedError{
     }
 
     getStatus(){
-        return 401
+        return 500
     }
 
 }

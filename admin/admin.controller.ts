@@ -28,29 +28,27 @@ export class AdminControllerImpl implements AdminController {
     }
 
     async getStats(req: Request, res: Response) {
-        const usersWithMailAmount = await this.adminService.getStats()
-        res.status(200).json({
-            status: 200,
-            success: true,
-            message: "Got the users with mail amount success",
-            data: usersWithMailAmount
-        })
+        try{
+            const tokenUnwrap = decodeUserToken(req.headers['authorization'] as string)
+            const {date, email} = req.body
+            //This call is to check if this credentials are valid for an admin, if we can find a record in admin that matches this
+            await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
+            const usersWithMailAmount = await this.adminService.getStats(date, email)
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Got the users with mail amount success",
+                data: usersWithMailAmount
+            })
+        }catch (error){
+            if (error instanceof AdminNotExists){
+                res.status(error.getStatus()).json(error.getAsJson())
+            }else{
+                res.status(500).send("Internal server error")
+            }
 
-        // const authHeader = req.headers['authorization']
-        // const token = authHeader && authHeader.split(' ')[1]//take out bearer
-        // const tokenUnwrap = decodeUserToken(token as string)
-        //
-        // try{
-        //     await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
-        //
-        // }
-        // catch (error){
-        //     if (error instanceof AdminNotExists){
-        //         res.status(401).send(error.message)
-        //     } else {
-        //         res.status(500).send("Internal server error");
-        //     }
-        // }
+
+        }
     }
 
 

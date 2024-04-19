@@ -5,16 +5,16 @@ import { prisma } from "../db/db";
 export class SendGridRepository implements EmailRepository{
 
 
-    async register(senderEmail: string, forwardEmail: string, subject: string, body: string): Promise<string | undefined> {
+    async register(senderId: number, forwardEmail: string, subject: string, body: string): Promise<string | undefined> {
            const email = await prisma.email.create({
                data:{
-                   sender:senderEmail,
+                   userId: senderId,
                    receiver:forwardEmail,
                    subject:subject,
                    data:body
                }
            })
-        return email.sender
+        return email.receiver
 
     }
 

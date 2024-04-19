@@ -1,11 +1,9 @@
 import {AdminRepository} from "./interfaces/admin.repository";
-import {Admin} from "@prisma/client";
+import {Admin, Prisma} from "@prisma/client";
 import { prisma } from "../db/db";
 
 
 export class AdminRepositoryImpl implements AdminRepository{
-
-
 
     async getAdmin(email:string, password:string): Promise<Admin | undefined> {
         const admin  = await prisma.admin.findFirst({
@@ -18,16 +16,29 @@ export class AdminRepositoryImpl implements AdminRepository{
     }
 
     async getAllUsers(){
-        return prisma.user.findMany();
+        return []
     }
 
-    async getUserMails(email:string){
-        return prisma.email.findMany({
+    async getUserMailsByDate(date:Date, email?:string){
+
+        return prisma.user.findMany({
+
             where:{
-                sender:email,
+                email: email
+            },
+            include:{
+                emails:{
+                    where:{
+                        date: {
+                            //This sets a starting and an ending point for the mails
+                            gte: date,
+                            lte: date,
+                        }
+                    }
+                }
             }
-            }
-        );
+        });
+
     }
 
 
