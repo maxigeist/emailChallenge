@@ -6,8 +6,8 @@ import {Email} from "./type/email.type";
 
 export class SendGridService implements EmailService{
     emailRepository: EmailRepository;
-
     constructor(emailRepository: EmailRepository) {
+
         this.emailRepository = emailRepository
     }
 

@@ -17,7 +17,7 @@ export function authenticateToken(req:Request, res:Response, next:any) {
 
 
 export function generateToken(id:number, email:string, password:string){
-    return jwt.sign({ _id: id, email: email, password:password }, process.env.TOKEN_SECRET as string,{expiresIn: "10s",});
+    return jwt.sign({ _id: id, email: email, password:password }, process.env.TOKEN_SECRET as string,{expiresIn: "1d",});
 }
 
 type TokenUnwrap = {
@@ -29,7 +29,6 @@ type TokenUnwrap = {
 
 
 
-export function decodeUserToken(authHeader:string) {
-    const token = authHeader && authHeader.split(' ')[1]//take out bearer
-    return jwt.decode(token as string) as TokenUnwrap
+export function decodeUserToken(token:string) {
+    return jwt.decode(token) as TokenUnwrap
 }

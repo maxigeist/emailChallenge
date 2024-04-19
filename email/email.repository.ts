@@ -2,7 +2,7 @@ import {EmailRepository} from "./interfaces/email.repository";
 import { prisma } from "../db/db";
 
 
-export class SendGridRepository implements EmailRepository{
+export class EmailRepository implements EmailRepository{
 
 
     async register(senderId: number, forwardEmail: string, subject: string, body: string): Promise<string | undefined> {

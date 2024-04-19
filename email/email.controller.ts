@@ -4,7 +4,7 @@ import e from "express";
 import {decodeUserToken} from "../token/token";
 
 
-export class SendGridController implements EmailController{
+export class EmailController implements EmailController{
 
     emailService: EmailService;
 
