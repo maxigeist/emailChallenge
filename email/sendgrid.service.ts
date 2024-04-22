@@ -1,19 +1,24 @@
 import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
-import sgMail from "@sendgrid/mail";
+import sgMail, {send} from "@sendgrid/mail";
 import {Email} from "./type/email.type";
 
 
 export class SendGridService implements EmailService{
     emailRepository: EmailRepository;
-    constructor(emailRepository: EmailRepository) {
-
+    emailLimit:number
+    constructor(emailRepository: EmailRepository, emailLimit:number) {
+        this.emailLimit = emailLimit
         this.emailRepository = emailRepository
     }
 
 
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
+        const emailCount = await this.emailRepository.getMailsFromAUserInDay(senderId)
+        if(emailCount < this.emailLimit){
+            return false
+        }
         const email:Email = {
             to:forwardEmail,
             from: senderEmail,

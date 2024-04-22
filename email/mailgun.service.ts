@@ -20,7 +20,6 @@ export class MailgunService implements EmailService{
         this.mailer.fromEmail = senderEmail;
         this.mailer.fromTitle = senderEmail;
         this.mailer.init()
-
         try{
             await this.mailer.send(senderEmail,subject, body )
             await this.emailRepository.register(senderId, forwardEmail, subject, body)

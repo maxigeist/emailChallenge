@@ -2,7 +2,7 @@ import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
 
 
-export class compoundService implements EmailService{
+export class CompoundService implements EmailService{
 
     emailRepository: EmailRepository;
     emailServices: EmailService[]
