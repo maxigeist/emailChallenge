@@ -1,3 +1,15 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-export const prisma = new PrismaClient()
+const { NODE_ENV } = process.env;
+
+let prismaDb:PrismaClient;
+
+if (NODE_ENV === 'production') {
+    prismaDb = new PrismaClient();
+} else {
+    prismaDb = new PrismaClient();
+}
+
+export default prismaDb;
+
+

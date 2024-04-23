@@ -1,14 +1,14 @@
 import {Router} from "express";
 import {EmailControllerImpl} from "../email/email.controller";
-import {SendGridService} from "../email/sendgrid.service";
 import {EmailRepositoryImpl} from "../email/email.repository";
 import {authenticateToken} from "../token/token";
 import {MailgunService} from "../email/mailgun.service";
+import prismaDb from "../db/db";
 
 
 export const mailgunRouter = Router()
 
-const emailRepository = new EmailRepositoryImpl()
+const emailRepository = new EmailRepositoryImpl(prismaDb)
 const mailgunService = new MailgunService(emailRepository)
 const mailgunController = new EmailControllerImpl(mailgunService)
 
