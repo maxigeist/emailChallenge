@@ -2,13 +2,8 @@ import {EmailRepository} from "./interfaces/email.repository";
 import {Email, PrismaClient} from "@prisma/client";
 
 
+
 export class EmailRepositoryImpl implements EmailRepository {
-
-    prismaClient:PrismaClient
-
-    constructor(prismaClient:PrismaClient) {
-        this.prismaClient = prismaClient
-    }
 
 
     async register(senderId: number, forwardEmail: string, subject: string, body: string): Promise<Email | undefined> {
@@ -36,4 +31,10 @@ export class EmailRepositoryImpl implements EmailRepository {
             }
         })
     }
+
+    async getAllMails():Promise<Email[]>{
+        return this.prismaClient.email.findMany()
+    }
+
+
 }
