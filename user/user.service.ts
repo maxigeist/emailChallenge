@@ -22,7 +22,7 @@ export class UserServiceImpl implements UserService{
         return user
     }
 
-    async register(name: string, email: string, password: string): Promise<string | undefined> {
+    async register(name: string, email: string, password: string): Promise<User | undefined> {
         const user = await this.userRepository.getUser(email)
         
         if(user != undefined){  

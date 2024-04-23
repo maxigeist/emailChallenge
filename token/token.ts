@@ -8,7 +8,6 @@ export function authenticateToken(req:Request, res:Response, next:any) {
     try {
         jwt.verify(token, process.env.TOKEN_SECRET as string)
         next()
-
     }
     catch (error){
         res.status(401).json({status: 401, success: false,message: "Unauthorized"});
@@ -20,7 +19,8 @@ export function generateToken(id:number, email:string, password:string){
     return jwt.sign({ _id: id, email: email, password:password }, process.env.TOKEN_SECRET as string,{expiresIn: "1d",});
 }
 
-type TokenUnwrap = {
+
+export type TokenUnwrap = {
     _id: string;
     email: string;
     password:string

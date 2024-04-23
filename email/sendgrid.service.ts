@@ -16,7 +16,8 @@ export class SendGridService implements EmailService{
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
         const emailCount = await this.emailRepository.getMailsFromAUserInDay(senderId)
-        if(emailCount < this.emailLimit){
+        console.log(emailCount)
+        if(emailCount > this.emailLimit){
             return false
         }
         const email:Email = {
@@ -26,13 +27,14 @@ export class SendGridService implements EmailService{
             text:body
         }
         try{
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
-            sgMail.send(email).then((response) => {
-                console.log(response[0].statusCode)
-                    console.log(response[0].headers)
-                    return true
-                })
-            await this.emailRepository.register(senderId, forwardEmail, subject, body)
+            // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
+            // sgMail.send(email).then((response) => {
+            //     console.log(response[0].statusCode)
+            //         console.log(response[0].headers)
+            //         return true
+            //     })
+            const email = await this.emailRepository.register(senderId, forwardEmail, subject, body)
+            console.log(email)
             return true
             }
             catch (error){

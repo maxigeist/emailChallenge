@@ -1,6 +1,6 @@
 import { UserController } from "./interfaces/user.controller";
 import { UserService } from "./interfaces/user.service";
-import e, {Request, Response} from "express";
+import {Request, Response} from "express";
 import { EmailExistsError } from "../error/email.exists";
 import { NotValidCredentials } from "../error/not.valid.credentials";
 import {generateToken} from "../token/token";

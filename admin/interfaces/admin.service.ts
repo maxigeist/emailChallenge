@@ -10,6 +10,6 @@ export interface AdminService{
 
     getAdmin(email:string, password:string):Promise<Admin | undefined>
 
-    getStats(date:Date, email:string):Promise<UserMailAmount[]>
+    getStats(date:string, email:string):Promise<UserMailAmount[]>
 
 }

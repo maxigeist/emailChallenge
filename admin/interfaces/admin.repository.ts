@@ -13,6 +13,6 @@ export interface AdminRepository{
 
     getAllUsers():Promise<User[]>
 
-    getUserMailsByDate(date:Date, email:string):Promise<UserWithPosts[]>
+    getUserMailsByDate(date:Date, email?:string):Promise<UserWithPosts[]>
 
 }

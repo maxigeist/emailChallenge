@@ -29,7 +29,9 @@ export class AdminControllerImpl implements AdminController {
 
     async getStats(req: Request, res: Response) {
         try{
-            const tokenUnwrap = decodeUserToken(req.headers['authorization'] as string)
+            const authHeader = req.headers['authorization']
+            const token = authHeader && authHeader.split(' ')[1]//take out bearer
+            const tokenUnwrap = decodeUserToken(token as string)
             const {date, email} = req.body
             //This call is to check if this credentials are valid for an admin, if we can find a record in admin that matches this
             await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
@@ -46,8 +48,6 @@ export class AdminControllerImpl implements AdminController {
             }else{
                 res.status(500).send("Internal server error")
             }
-
-
         }
     }
 

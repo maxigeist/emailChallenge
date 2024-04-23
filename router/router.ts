@@ -13,4 +13,4 @@ router.use("/user", userRouter)
 
 router.use("/admin", adminRouter)
 
-router.use("/email", mailgunRouter)
+router.use("/email", sendgridRouter)

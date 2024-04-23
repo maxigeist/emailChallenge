@@ -1,5 +1,5 @@
 import {AdminService} from "./interfaces/admin.service";
-import {Admin, Email, User} from "@prisma/client";
+import {Admin,} from "@prisma/client";
 import {AdminRepository} from "./interfaces/admin.repository";
 import {AdminNotExists} from "../error/admin.not.exists";
 
@@ -29,13 +29,20 @@ export class AdminServiceImpl implements AdminService{
         }
     }
 
-    async getStats(date:Date, email:string):Promise<UserMailAmount[]>{
+    async getStats(date?:string, email?:string):Promise<UserMailAmount[]>{
         const userMailAmounts:UserMailAmount[] = []
-        const usersWithPosts = await this.adminRepository.getUserMailsByDate(date ? new Date(date): new Date(), email)
-        for (const user of usersWithPosts) {
-            userMailAmounts.push({email: user.email, mailAmount: user.emails.length})
+
+        const usersWithPosts = await this.adminRepository.getUserMailsByDate(date ? new Date(date): new Date(), email ? email: undefined)
+
+        if (usersWithPosts?.length > 0) {
+            for (const user of usersWithPosts) {
+                userMailAmounts.push({email: user.email, mailAmount: user.emails?.length ? user.emails.length : 0})
+            }
+            return userMailAmounts
         }
-        return userMailAmounts
+        else {
+            return []
+        }
 
     }
 

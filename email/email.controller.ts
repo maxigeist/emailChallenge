@@ -13,14 +13,14 @@ export class EmailControllerImpl implements EmailController{
     }
 
 
-    send(req: e.Request, res: e.Response): any {
+    async send(req: e.Request, res: e.Response) {
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]//take out bearer
         const tokenUnwrap = decodeUserToken(token as string)
 
         try{
             const {forwardEmail, subject, body} = req.body
-            this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
+            const result = await this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
             res.status(200).send("The email was sent correctly")
             }
         catch (error){
