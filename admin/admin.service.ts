@@ -36,7 +36,9 @@ export class AdminServiceImpl implements AdminService{
 
         if (usersWithPosts?.length > 0) {
             for (const user of usersWithPosts) {
-                userMailAmounts.push({email: user.email, mailAmount: user.emails?.length ? user.emails.length : 0})
+                if (user.emails.length > 0) {
+                    userMailAmounts.push({email: user.email, mailAmount: user.emails.length})
+                }
             }
             return userMailAmounts
         }

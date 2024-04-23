@@ -2,6 +2,7 @@ import {EmailController} from "./interfaces/email.controller";
 import {EmailService} from "./interfaces/email.service";
 import e from "express";
 import {decodeUserToken} from "../token/token";
+import {EmailLimit} from "../error/email.limit";
 
 
 export class EmailControllerImpl implements EmailController{
@@ -24,7 +25,12 @@ export class EmailControllerImpl implements EmailController{
             res.status(200).send("The email was sent correctly")
             }
         catch (error){
-            res.status(400).send("Something went wrong")
+            if (error instanceof EmailLimit){
+                res.status(error.getStatus()).json(error.getAsJson())
+            }
+            else {
+                res.status(400).send("Something went wrong")
+            }
         }
 
     }

@@ -4,13 +4,14 @@ import sgMail, {send} from "@sendgrid/mail";
 import {Email} from "./type/email.type";
 import {EmailLimit} from "../error/email.limit";
 import {checkEmailLimit} from "../utils/check.email.limit";
+import {Retry} from "./interfaces/retry";
+import * as console from "node:console";
 
 
-export class SendGridService implements EmailService{
+export class SendGridService implements EmailService, Retry{
+
     emailRepository: EmailRepository;
-    emailLimit:number
-    constructor(emailRepository: EmailRepository, emailLimit:number) {
-        this.emailLimit = emailLimit
+    constructor(emailRepository: EmailRepository) {
         this.emailRepository = emailRepository
     }
 
@@ -24,20 +25,28 @@ export class SendGridService implements EmailService{
             subject:subject,
             text:body
         }
-        try{
-            // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
-            // sgMail.send(email).then((response) => {
-            //     console.log(response[0].statusCode)
-            //         console.log(response[0].headers)
-            //         return true
-            //     })
-            await this.emailRepository.register(senderId, forwardEmail, subject, body)
-            return true
+        for (let i = 0; i < this.getAmountOfRetries(); i++) {
+            try{
+                // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
+                // sgMail.send(email).then((response) => {
+                //     console.log(response[0].statusCode)
+                //         console.log(response[0].headers)
+                //         return true
+                //     })
+                const email = await this.emailRepository.register(senderId, forwardEmail, subject, body)
+                console.log(email)
+                return true
             }
             catch (error){
                 console.error(error)
-                return false
-
             }
         }
+        throw Error
+
+        }
+
+
+    getAmountOfRetries(): number {
+        return 1;
+    }
 }

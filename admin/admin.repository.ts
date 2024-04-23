@@ -27,8 +27,6 @@ export class AdminRepositoryImpl implements AdminRepository {
     }
 
     async getUserMailsByDate(date: Date, email?: string) {
-
-
         return this.prismaClient.user.findMany({
 
             where: {

@@ -37,4 +37,10 @@ export class EmailRepositoryImpl implements EmailRepository {
             }
         })
     }
+
+    async getAllMails():Promise<Email[]>{
+        return this.prismaClient.email.findMany()
+    }
+
+
 }

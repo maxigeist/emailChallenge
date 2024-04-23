@@ -18,7 +18,7 @@ export class AdminNotExists implements Error, ExtendedError{
     }
 
     getStatus(){
-        return 401
+        return 403
     }
 
 }
