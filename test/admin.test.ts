@@ -60,7 +60,7 @@ test('a valid admin should get stats', async () => {
     const adminRepository = new AdminRepositoryImpl(prisma)
     const adminService = new AdminServiceImpl(adminRepository)
 
-    const mailAmountAndInfo = await adminService.getStats(date.toDateString(), undefined)
+    const mailAmountAndInfo = await adminService.getStats(undefined, undefined)
 
     console.log(mailAmountAndInfo[0])
 
