@@ -1,10 +1,11 @@
 import {prismaMock} from '../test_config/singleton'
-import prisma from '../test_config/client'
+
 import {UserRepositoryImpl} from "../user/user.repository";
 import {UserServiceImpl} from "../user/user.service";
 import {authenticateToken, decodeUserToken, generateToken} from "../token/token";
 import {UserControllerImpl} from "../user/user.controller";
 import {InternalServer} from "../error/internal.server";
+import prismaDb from "../db/db";
 
 
 beforeAll(() => {
@@ -21,7 +22,7 @@ test('should create new user ', async () => {
 
     prismaMock.user.create.mockResolvedValue(user)
 
-    const userRepositoryImpl = new UserRepositoryImpl(prisma)
+    const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
 
     await expect(userRepositoryImpl.register("Rich", "hello@prisma.io", "password")).resolves.toEqual({
         id: 1,
@@ -42,7 +43,7 @@ test('should login an existing user ', async () => {
     prismaMock.user.create.mockResolvedValue(user)
     prismaMock.user.findFirst.mockResolvedValue(user)
 
-    const userRepositoryImpl = new UserRepositoryImpl(prisma)
+    const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
 
     // Register a user
     await userRepositoryImpl.register("Rich", "hello@prisma.io", "password")
@@ -68,7 +69,7 @@ test('user token functionality', async () => {
     prismaMock.user.findFirst.mockResolvedValue(userMock)
 
 
-    const userRepositoryImpl = new UserRepositoryImpl(prisma)
+    const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
     const userServiceImpl = new UserServiceImpl(userRepositoryImpl)
     const userControllerImpl = new UserControllerImpl(userServiceImpl, new InternalServer())
 

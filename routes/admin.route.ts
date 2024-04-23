@@ -2,12 +2,12 @@ import {Router} from "express"
 import {AdminRepositoryImpl} from "../admin/admin.repository";
 import {AdminControllerImpl} from "../admin/admin.controller";
 import {AdminServiceImpl} from "../admin/admin.service";
-import {prisma} from "../db/db";
+import prismaDb from "../db/db";
 
 
 export const adminRouter = Router()
 
-const adminRepositoryImpl = new AdminRepositoryImpl(prisma)
+const adminRepositoryImpl = new AdminRepositoryImpl(prismaDb)
 const adminServiceImpl = new AdminServiceImpl(adminRepositoryImpl)
 const adminControllerImpl = new AdminControllerImpl(adminServiceImpl)
 

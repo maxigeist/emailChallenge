@@ -3,12 +3,12 @@ import {EmailControllerImpl} from "../email/email.controller";
 import {SendGridService} from "../email/sendgrid.service";
 import {EmailRepositoryImpl} from "../email/email.repository";
 import {authenticateToken} from "../token/token";
-import {prisma} from "../db/db";
+import prismaDb from "../db/db";
 
 
 export const sendgridRouter = Router()
 
-const sendGridRepository = new EmailRepositoryImpl(prisma)
+const sendGridRepository = new EmailRepositoryImpl(prismaDb)
 const sendGridService = new SendGridService(sendGridRepository, 10)
 const sendGridController = new EmailControllerImpl(sendGridService)
 
