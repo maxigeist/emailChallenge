@@ -4,12 +4,12 @@ import {UserRepositoryImpl} from "../user/user.repository";
 import {UserServiceImpl} from "../user/user.service";
 import {authenticateToken, decodeUserToken, generateToken} from "../token/token";
 import {UserControllerImpl} from "../user/user.controller";
-import {InternalServer} from "../error/internal.server";
 import prismaDb from "../db/db";
 
 
 beforeAll(() => {
     process.env.TOKEN_SECRET = 'nendoanepacene902394iocniampoemce22d2n';
+    process.env.TOKEN_LIMIT = '1d'
 });
 
 test('should create new user ', async () => {
@@ -71,13 +71,15 @@ test('user token functionality', async () => {
 
     const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
     const userServiceImpl = new UserServiceImpl(userRepositoryImpl)
-    const userControllerImpl = new UserControllerImpl(userServiceImpl, new InternalServer())
+    const userControllerImpl = new UserControllerImpl(userServiceImpl)
 
     const user = await userServiceImpl.login("Rich", "password")
 
     if (user) {
         const token = generateToken(user?.id, user.email, user.password)
-        const decodedToken = decodeUserToken(token)
+
+        const decodedToken = decodeUserToken("bearer " + token)
+
         expect(decodedToken._id == "1")
         expect(decodedToken.email == "geistmaximo@gmail.com")
         expect(decodedToken.password == "password")

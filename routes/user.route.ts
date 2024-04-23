@@ -13,7 +13,7 @@ const commonError = new InternalServer()
 
 const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
 const userServiceImpl = new UserServiceImpl(userRepositoryImpl)
-const userControllerImpl = new UserControllerImpl(userServiceImpl, commonError)
+const userControllerImpl = new UserControllerImpl(userServiceImpl)
 
 
 userRouter.post("/register", async (req, res) => {

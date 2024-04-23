@@ -1,23 +1,24 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class NotValidCredentials implements Error, ExtendedError{
 
-    name: string;
+export class RetryLimitReached implements Error, ExtendedError{
+
     message: string;
-    stack?: string | undefined;
-    
-    constructor (){
-        this.name = "Not valid credentials"
-        this.message = "The credentials do not match any existing user"
+    name: string;
+
+
+    constructor() {
+        this.message = "The amount of tries for this service was reached"
+        this.name = "Retry email limit was reached "
     }
+
 
     getAsJson(): { status: number; success: boolean; message: string } {
         return {message: this.message, status: this.getStatus(), success: false};
     }
 
     getStatus(): number {
-        return 403;
+        return 400;
     }
-
 
 }

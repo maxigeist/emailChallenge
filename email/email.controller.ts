@@ -2,7 +2,7 @@ import {EmailController} from "./interfaces/email.controller";
 import {EmailService} from "./interfaces/email.service";
 import e from "express";
 import {decodeUserToken} from "../token/token";
-import {EmailLimit} from "../error/email.limit";
+import {returnRes} from "../error/handler/error.handler";
 
 
 export class EmailControllerImpl implements EmailController{
@@ -15,22 +15,20 @@ export class EmailControllerImpl implements EmailController{
 
 
     async send(req: e.Request, res: e.Response) {
-        const authHeader = req.headers['authorization']
-        const token = authHeader && authHeader.split(' ')[1]//take out bearer
-        const tokenUnwrap = decodeUserToken(token as string)
+        const tokenUnwrap = decodeUserToken(req.headers['authorization'])
 
         try{
             const {forwardEmail, subject, body} = req.body
             const result = await this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
-            res.status(200).send("The email was sent correctly")
+            res.status(200).json(
+                {
+                    status:200,
+                    success:true,
+                    message: "The email was sent correctly"
+                })
             }
         catch (error){
-            if (error instanceof EmailLimit){
-                res.status(error.getStatus()).json(error.getAsJson())
-            }
-            else {
-                res.status(400).send("Something went wrong")
-            }
+            returnRes(error, res)
         }
 
     }

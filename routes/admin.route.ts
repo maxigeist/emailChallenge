@@ -3,6 +3,8 @@ import {AdminRepositoryImpl} from "../admin/admin.repository";
 import {AdminControllerImpl} from "../admin/admin.controller";
 import {AdminServiceImpl} from "../admin/admin.service";
 import prismaDb from "../db/db";
+import {AdminNotExists} from "../error/admin.not.exists";
+import {authenticateToken} from "../token/token";
 
 
 export const adminRouter = Router()
@@ -12,10 +14,10 @@ const adminServiceImpl = new AdminServiceImpl(adminRepositoryImpl)
 const adminControllerImpl = new AdminControllerImpl(adminServiceImpl)
 
 
-adminRouter.get("/getAdmin", async (req, res) => {
+adminRouter.get("/getAdmin", authenticateToken, async (req, res) => {
     return adminControllerImpl.getAdmin(req, res)
 })
 
-adminRouter.get("/stats", async (req, res) => {
+adminRouter.get("/stats", authenticateToken, async (req, res) => {
     return adminControllerImpl.getStats(req, res)
 })

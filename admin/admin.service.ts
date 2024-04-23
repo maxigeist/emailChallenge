@@ -31,12 +31,11 @@ export class AdminServiceImpl implements AdminService{
 
     async getStats(date?:string, email?:string):Promise<UserMailAmount[]>{
         const userMailAmounts:UserMailAmount[] = []
-
         const usersWithPosts = await this.adminRepository.getUserMailsByDate(date ? new Date(date): new Date(), email ? email: undefined)
-
         if (usersWithPosts?.length > 0) {
             for (const user of usersWithPosts) {
-                if (user.emails.length > 0) {
+                // Users that didn't send mails shouldn't be in the report
+                if (user.emails?.length > 0) {
                     userMailAmounts.push({email: user.email, mailAmount: user.emails.length})
                 }
             }

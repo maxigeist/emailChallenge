@@ -2,17 +2,20 @@ import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
 import sgMail, {send} from "@sendgrid/mail";
 import {Email} from "./type/email.type";
-import {EmailLimit} from "../error/email.limit";
 import {checkEmailLimit} from "../utils/check.email.limit";
 import {Retry} from "./interfaces/retry";
 import * as console from "node:console";
+import {RetryLimitReached} from "../error/retry.limit.reached";
 
 
-export class SendGridService implements EmailService, Retry{
+export class SendGridService implements EmailService{
 
     emailRepository: EmailRepository;
-    constructor(emailRepository: EmailRepository) {
+    amountOfTries:number
+
+    constructor(emailRepository: EmailRepository, amountOfTries:number) {
         this.emailRepository = emailRepository
+        this.amountOfTries = amountOfTries
     }
 
 
@@ -25,7 +28,7 @@ export class SendGridService implements EmailService, Retry{
             subject:subject,
             text:body
         }
-        for (let i = 0; i < this.getAmountOfRetries(); i++) {
+        for (let i = 0; i < this.amountOfTries; i++) {
             try{
                 // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
                 // sgMail.send(email).then((response) => {
@@ -33,6 +36,7 @@ export class SendGridService implements EmailService, Retry{
                 //         console.log(response[0].headers)
                 //         return true
                 //     })
+                console.log("sendgrid")
                 const email = await this.emailRepository.register(senderId, forwardEmail, subject, body)
                 console.log(email)
                 return true
@@ -41,12 +45,8 @@ export class SendGridService implements EmailService, Retry{
                 console.error(error)
             }
         }
-        throw Error
+        throw new RetryLimitReached()
 
         }
 
-
-    getAmountOfRetries(): number {
-        return 1;
-    }
 }

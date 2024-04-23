@@ -9,7 +9,7 @@ import prismaDb from "../db/db";
 export const sendgridRouter = Router()
 
 const sendGridRepository = new EmailRepositoryImpl(prismaDb)
-const sendGridService = new SendGridService(sendGridRepository)
+const sendGridService = new SendGridService(sendGridRepository, 2)
 const sendGridController = new EmailControllerImpl(sendGridService)
 
 sendgridRouter.post("/send", authenticateToken, async (req, res) => {

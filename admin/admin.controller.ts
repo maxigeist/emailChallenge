@@ -1,8 +1,8 @@
 import {AdminController} from "./interfaces/admin.controller";
 import {AdminService} from "./interfaces/admin.service";
 import {Request, Response} from "express";
-import {AdminNotExists} from "../error/admin.not.exists";
 import {decodeUserToken} from "../token/token";
+import {returnRes} from "../error/handler/error.handler";
 
 
 export class AdminControllerImpl implements AdminController {
@@ -17,21 +17,20 @@ export class AdminControllerImpl implements AdminController {
         try {
             const {email, password} = req.body
             const admin = await this.adminService.getAdmin(email, password)
-            res.status(200).send("Correct admin")
+            res.status(200).json(
+                {
+                    status:200,
+                    success:true,
+                    message: "The credentials for this admin are correct"
+                })
         } catch (error) {
-            if (error instanceof AdminNotExists) {
-                res.status(401).send(error.message)
-            } else {
-                res.status(500).send("Internal server error");
-            }
+            returnRes(error, res)
         }
     }
 
     async getStats(req: Request, res: Response) {
         try{
-            const authHeader = req.headers['authorization']
-            const token = authHeader && authHeader.split(' ')[1]//take out bearer
-            const tokenUnwrap = decodeUserToken(token as string)
+            const tokenUnwrap = decodeUserToken(req.headers['authorization'])
             const {date, email} = req.body
             //This call is to check if this credentials are valid for an admin, if we can find a record in admin that matches this
             await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
@@ -39,17 +38,14 @@ export class AdminControllerImpl implements AdminController {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: "Got the users with mail amount success",
+                message: "Got the users with their mail amount for the day",
                 data: usersWithMailAmount
             })
         }catch (error){
-            if (error instanceof AdminNotExists){
-                res.status(error.getStatus()).json(error.getAsJson())
-            }else{
-                res.status(500).send("Internal server error")
-            }
+            returnRes(error, res)
         }
     }
+
 
 
 }

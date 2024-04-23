@@ -1,53 +1,44 @@
-import { UserController } from "./interfaces/user.controller";
-import { UserService } from "./interfaces/user.service";
+import {UserController} from "./interfaces/user.controller";
+import {UserService} from "./interfaces/user.service";
 import {Request, Response} from "express";
-import { EmailExistsError } from "../error/email.exists";
-import { NotValidCredentials } from "../error/not.valid.credentials";
 import {generateToken} from "../token/token";
-import {ExtendedError} from "../error/interface/extended.error";
+import {returnRes} from "../error/handler/error.handler";
 
 
-export class UserControllerImpl implements UserController{
-    
+export class UserControllerImpl implements UserController {
+
     userService: UserService;
-    commonError: ExtendedError
-    
-    constructor(userService:UserService, commonError:ExtendedError){
+
+    constructor(userService: UserService) {
         this.userService = userService
-        this.commonError = commonError
     }
 
     async login(req: Request, res: Response) {
-        try{
+        try {
             const {email, password} = req.body
             const user = await this.userService.login(email, password)
-            if (user){
+            if (user) {
                 const token = generateToken(user.id, user.email, user.password)
-                res.status(200).json({status: 200, success: true,message: "login success",token: token});
+                res.status(200).json({status: 200, success: true, message: "Successful login", token: token});
             }
-        }
-        catch(error){
-            if (error instanceof NotValidCredentials){
-                res.status(401).send(error.message)
-            }
-            else{
-                res.status(500).send("Internal server error");
-            }
+        } catch (error) {
+            returnRes(error, res)
         }
     }
 
-    async register(req:Request, res:Response){
+    async register(req: Request, res: Response) {
         try {
             const {email, name, password} = req.body
-            const response = await this.userService.register(name, email, password);
-            res.send(response);
+            await this.userService.register(name, email, password);
+            res.status(200).json(
+                {
+                    status: 200,
+                    success: true,
+                    message: "The user was registered correctly",
+                }
+            );
         } catch (error) {
-            if (error instanceof EmailExistsError){
-                res.status(error.getStatus()).json(error.getAsJson())
-            }
-            else{
-                res.status(this.commonError.getStatus()).json(this.commonError.getAsJson());
-            }
+            returnRes(error, res)
         }
 
     }
