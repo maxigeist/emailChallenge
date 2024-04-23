@@ -3,6 +3,8 @@ import {UserRepositoryImpl} from "../user/user.repository";
 import {AdminRepositoryImpl} from "../admin/admin.repository";
 import {AdminServiceImpl} from "../admin/admin.service";
 import mail from "@sendgrid/mail";
+import {EmailRepositoryImpl} from "../email/email.repository";
+import {SendGridService} from "../email/sendgrid.service";
 import prismaDb from "../db/db";
 
 test('should get a valid admin ', async () => {

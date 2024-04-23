@@ -1,6 +1,8 @@
 import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
 import { NodeMailgun } from 'ts-mailgun';
+import {EmailLimit} from "../error/email.limit";
+import {checkEmailLimit} from "../utils/check.email.limit";
 
 
 export class MailgunService implements EmailService{
@@ -16,7 +18,8 @@ export class MailgunService implements EmailService{
 
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
-        this.mailer.domain = 'sandbox8585998ddc58458181abba01d5b2c7c0.mailgun.org';
+        await checkEmailLimit(this.emailRepository, senderId)
+        this.mailer.domain = process.env.MAILGUN_MAILER_DOMAIN as string
         this.mailer.fromEmail = senderEmail;
         this.mailer.fromTitle = senderEmail;
         this.mailer.init()

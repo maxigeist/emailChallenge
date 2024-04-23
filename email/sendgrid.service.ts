@@ -2,6 +2,8 @@ import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
 import sgMail, {send} from "@sendgrid/mail";
 import {Email} from "./type/email.type";
+import {EmailLimit} from "../error/email.limit";
+import {checkEmailLimit} from "../utils/check.email.limit";
 
 
 export class SendGridService implements EmailService{
@@ -15,11 +17,7 @@ export class SendGridService implements EmailService{
 
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
-        const emailCount = await this.emailRepository.getMailsFromAUserInDay(senderId)
-        console.log(emailCount)
-        if(emailCount > this.emailLimit){
-            return false
-        }
+        await checkEmailLimit(this.emailRepository, senderId)
         const email:Email = {
             to:forwardEmail,
             from: senderEmail,
@@ -33,8 +31,7 @@ export class SendGridService implements EmailService{
             //         console.log(response[0].headers)
             //         return true
             //     })
-            const email = await this.emailRepository.register(senderId, forwardEmail, subject, body)
-            console.log(email)
+            await this.emailRepository.register(senderId, forwardEmail, subject, body)
             return true
             }
             catch (error){

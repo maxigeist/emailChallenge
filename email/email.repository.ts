@@ -2,12 +2,13 @@ import {EmailRepository} from "./interfaces/email.repository";
 import {Email, PrismaClient} from "@prisma/client";
 
 
-export class EmailRepositoryImpl implements EmailRepository {
 
+export class EmailRepositoryImpl implements EmailRepository {
     prismaClient:PrismaClient
 
     constructor(prismaClient:PrismaClient) {
         this.prismaClient = prismaClient
+
     }
 
 

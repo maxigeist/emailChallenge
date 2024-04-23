@@ -1,5 +1,7 @@
 import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
+import {EmailLimit} from "../error/email.limit";
+import {checkEmailLimit} from "../utils/check.email.limit";
 
 
 export class CompoundService implements EmailService{
@@ -13,6 +15,7 @@ export class CompoundService implements EmailService{
     }
 
     async sendEmail(senderEmail: string, senderId: number, forwardEmail: string, subject: string, body: string): Promise<boolean> {
+        await checkEmailLimit(this.emailRepository, senderId)
         for (const emailService of this.emailServices){
             const resultOfSentEmail = await  emailService.sendEmail(senderEmail, senderId, forwardEmail, subject, body)
             if (resultOfSentEmail){
