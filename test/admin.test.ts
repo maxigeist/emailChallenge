@@ -4,6 +4,8 @@ import prisma from "../test_config/client";
 import {AdminRepositoryImpl} from "../admin/admin.repository";
 import {AdminServiceImpl} from "../admin/admin.service";
 import mail from "@sendgrid/mail";
+import {EmailRepositoryImpl} from "../email/email.repository";
+import {SendGridService} from "../email/sendgrid.service";
 
 test('should get a valid admin ', async () => {
     const admin = {
@@ -38,27 +40,27 @@ test('a valid admin should get stats', async () => {
         password: "password"
     }
 
-    const email = prisma.email.create({
-        data: {
-            userId: 1,
-            receiver: "geistmaximo@gmail.com",
-            subject: "Reunión",
-            data: "La reunión va a ser el jueves"
-        }
-    })
+    const date = new Date()
+    const email = {
+        id: 1,
+        receiver: "geistmaximo@gmail.com",
+        subject: "Reunión",
+        data: "La reunión va a ser el jueves",
+        date:date,
+        userId: 1
+    }
 
     prismaMock.admin.create.mockResolvedValue(admin)
     prismaMock.user.create.mockResolvedValue(user)
     prismaMock.user.findMany.mockResolvedValue([user])
-
-
-
+    prismaMock.email.create.mockResolvedValue(email)
+    prismaMock.email.findMany.mockResolvedValue([email])
 
 
     const adminRepository = new AdminRepositoryImpl(prisma)
     const adminService = new AdminServiceImpl(adminRepository)
 
-    const mailAmountAndInfo = await adminService.getStats(undefined, undefined)
+    const mailAmountAndInfo = await adminService.getStats(date.toDateString(), undefined)
 
     console.log(mailAmountAndInfo[0])
 
@@ -83,15 +85,23 @@ test('there should be no mails for a date of 2019', async () => {
         date: new Date(),
         userId: 1
     }
+    const user = {
+        id: 1,
+        name: 'Máximo',
+        email: 'geistmaximo@gmail.com',
+        password: "password"
+    }
 
     prismaMock.admin.create.mockResolvedValue(admin)
+    prismaMock.user.create.mockResolvedValue(user)
+    prismaMock.user.findMany.mockResolvedValue([user])
     prismaMock.admin.findFirst.mockResolvedValue(admin)
     prismaMock.email.create.mockResolvedValue(email)
 
     const adminRepository = new AdminRepositoryImpl(prisma)
     const adminService = new AdminServiceImpl(adminRepository)
 
-    const mailAmountAndInfo = await adminService.getStats(undefined, "geistmaximo@gmail.com")
+    const mailAmountAndInfo = await adminService.getStats("2019-04-19", "geistmaximo@gmail.com")
 
     console.log(mailAmountAndInfo)
 

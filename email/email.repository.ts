@@ -1,9 +1,15 @@
 import {EmailRepository} from "./interfaces/email.repository";
 import {prisma} from "../db/db";
-import {Email} from "@prisma/client";
+import {Email, PrismaClient} from "@prisma/client";
 
 
 export class EmailRepositoryImpl implements EmailRepository {
+    prismaClient:PrismaClient
+
+    constructor(prismaClient:PrismaClient) {
+        this.prismaClient = prismaClient
+
+    }
 
 
     async register(senderId: number, forwardEmail: string, subject: string, body: string): Promise<Email | undefined> {

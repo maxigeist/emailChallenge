@@ -16,7 +16,6 @@ export class SendGridService implements EmailService{
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
         const emailCount = await this.emailRepository.getMailsFromAUserInDay(senderId)
-        console.log(emailCount)
         if(emailCount > this.emailLimit){
             return false
         }
