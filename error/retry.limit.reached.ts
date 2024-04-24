@@ -14,7 +14,11 @@ export class RetryLimitReached implements Error, ExtendedError{
 
 
     getAsJson(): { status: number; success: boolean; message: string } {
-        return {message: this.message, status: this.getStatus(), success: false};
+        return {
+            status:this.getStatus(),
+            success:false,
+            message:this.message
+        }
     }
 
     getStatus(): number {

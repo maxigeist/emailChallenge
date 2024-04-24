@@ -23,15 +23,15 @@ export class MailgunService implements EmailService{
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
         if (await checkMissingFields([senderEmail, senderId as unknown as string, forwardEmail])) {
-            await checkEmailLimit(this.emailRepository, senderId)
             this.mailer.domain = process.env.MAILGUN_MAILER_DOMAIN as string
             this.mailer.fromEmail = senderEmail;
             this.mailer.fromTitle = senderEmail;
             this.mailer.init()
+
             for (let i = 0; i < this.amountOfTries; i++) {
                 try {
-                    await this.mailer.send(senderEmail, subject, body)
                     console.log("mailgun")
+                    await this.mailer.send(senderEmail, subject, body)
                     await this.emailRepository.register(senderId, forwardEmail, subject, body)
                     return true
                 } catch (error) {

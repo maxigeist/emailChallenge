@@ -20,12 +20,9 @@ export class SendGridService implements EmailService{
         sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
     }
 
-
-
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
         if (await checkMissingFields([senderEmail, senderId as unknown as string, forwardEmail])) {
 
-            await checkEmailLimit(this.emailRepository, senderId)
 
             for (let i = 0; i < this.amountOfTries; i++) {
                 try {
@@ -36,7 +33,6 @@ export class SendGridService implements EmailService{
                         text: body
                     }
                     await sgMail.send(emailType)
-                    console.log("sendgrid")
                     await this.emailRepository.register(senderId, forwardEmail, subject, body)
                     return true
                 } catch (error) {

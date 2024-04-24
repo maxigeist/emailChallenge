@@ -5,6 +5,9 @@ import {UserServiceImpl} from "../user/user.service";
 import {authenticateToken, decodeUserToken, generateToken} from "../token/token";
 import {UserControllerImpl} from "../user/user.controller";
 import prismaDb from "../db/db";
+import {describe} from "@jest/globals";
+import request from "supertest";
+import app from "../src/server";
 
 
 beforeAll(() => {
@@ -71,7 +74,6 @@ test('user token functionality', async () => {
 
     const userRepositoryImpl = new UserRepositoryImpl(prismaDb)
     const userServiceImpl = new UserServiceImpl(userRepositoryImpl)
-    const userControllerImpl = new UserControllerImpl(userServiceImpl)
 
     const user = await userServiceImpl.login("Rich", "password")
 
@@ -85,6 +87,8 @@ test('user token functionality', async () => {
         expect(decodedToken.password == "password")
     }
 })
+
+
 
 
 

@@ -1,14 +1,13 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class EmailLimit implements Error, ExtendedError{
+export class EmailNotValid implements Error, ExtendedError{
 
     name: string;
     message: string;
 
     constructor (){
-        this.name = "Email limit reached"
-        this.message = "You have reached the limit of mails sent in a day"
-
+        this.name = "Email is not valid"
+        this.message = "This is not a valid email address"
     }
 
     getAsJson(): { status: number; success: boolean; message: string } {
@@ -20,7 +19,7 @@ export class EmailLimit implements Error, ExtendedError{
     }
 
     getStatus(): number {
-        return 429;
+        return 405;
     }
 
 }
