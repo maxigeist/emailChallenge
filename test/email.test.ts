@@ -16,9 +16,6 @@ beforeAll(() => {
     process.env.TOKEN_SECRET = 'nendoanepacene902394iocniampoemce22d2n';
     process.env.MAIL_LIMIT='0'
     process.env.TOKEN_LIMIT='1d'
-    process.env.SENDGRID_API_KEY="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"
-    process.env.MAILGUN_API_KEY="c8a07fcf1502d358c0a8cab4fdb035b9-19806d14-f6b7aa4b"
-    process.env.MAILGUN_MAILER_DOMAIN="sandbox8585998ddc58458181abba01d5b2c7c0.mailgun.org"
 });
 
 test('should create a new mail', async () => {
