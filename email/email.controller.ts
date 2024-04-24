@@ -19,7 +19,7 @@ export class EmailControllerImpl implements EmailController{
 
         try{
             const {forwardEmail, subject, body} = req.body
-            const result = await this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
+            await this.emailService.sendEmail(tokenUnwrap.email, parseInt(tokenUnwrap._id),  forwardEmail, subject, body)
             res.status(200).json(
                 {
                     status:200,

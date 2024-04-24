@@ -12,6 +12,7 @@ export function returnRes(error:any, res:Response){
 }
 
 
+//There must be a way that this can be done better
 function isErrorExtendedError(error: any): error is ExtendedError {
     return error.getStatus !== undefined &&
         error.getAsJson !== undefined

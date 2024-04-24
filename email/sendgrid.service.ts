@@ -6,6 +6,7 @@ import {checkEmailLimit} from "../utils/check.email.limit";
 import {Retry} from "./interfaces/retry";
 import * as console from "node:console";
 import {RetryLimitReached} from "../error/retry.limit.reached";
+import {checkMissingFields} from "../utils/check.missing.fields";
 
 
 export class SendGridService implements EmailService{
@@ -16,37 +17,36 @@ export class SendGridService implements EmailService{
     constructor(emailRepository: EmailRepository, amountOfTries:number) {
         this.emailRepository = emailRepository
         this.amountOfTries = amountOfTries
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
     }
 
 
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
-        await checkEmailLimit(this.emailRepository, senderId)
-        const email:Email = {
-            to:forwardEmail,
-            from: senderEmail,
-            subject:subject,
-            text:body
-        }
-        for (let i = 0; i < this.amountOfTries; i++) {
-            try{
-                // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
-                // sgMail.send(email).then((response) => {
-                //     console.log(response[0].statusCode)
-                //         console.log(response[0].headers)
-                //         return true
-                //     })
-                console.log("sendgrid")
-                const email = await this.emailRepository.register(senderId, forwardEmail, subject, body)
-                console.log(email)
-                return true
+        if (await checkMissingFields([senderEmail, senderId as unknown as string, forwardEmail])) {
+
+            await checkEmailLimit(this.emailRepository, senderId)
+
+            for (let i = 0; i < this.amountOfTries; i++) {
+                try {
+                    const emailType: Email = {
+                        to: forwardEmail,
+                        from: senderEmail,
+                        subject: subject,
+                        text: body
+                    }
+                    await sgMail.send(emailType)
+                    console.log("sendgrid")
+                    await this.emailRepository.register(senderId, forwardEmail, subject, body)
+                    return true
+                } catch (error) {
+                    console.error(error)
+                }
             }
-            catch (error){
-                console.error(error)
-            }
-        }
-        throw new RetryLimitReached()
+            throw new RetryLimitReached()
 
         }
+        return false
+    }
 
 }

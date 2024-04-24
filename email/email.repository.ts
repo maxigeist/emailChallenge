@@ -16,8 +16,8 @@ export class EmailRepositoryImpl implements EmailRepository {
             data: {
                 userId: senderId,
                 receiver: forwardEmail,
-                subject: subject,
-                data: body
+                subject: subject ? subject : "",
+                data: body ? body : ""
             }
         })
         return email ? email : undefined
@@ -35,10 +35,6 @@ export class EmailRepositoryImpl implements EmailRepository {
                 userId: senderId
             }
         })
-    }
-
-    async getAllMails():Promise<Email[]>{
-        return this.prismaClient.email.findMany()
     }
 
 

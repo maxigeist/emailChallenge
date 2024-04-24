@@ -2,6 +2,7 @@ import {AdminService} from "./interfaces/admin.service";
 import {Admin,} from "@prisma/client";
 import {AdminRepository} from "./interfaces/admin.repository";
 import {AdminNotExists} from "../error/admin.not.exists";
+import {checkMissingFields} from "../utils/check.missing.fields";
 
 
 
@@ -20,12 +21,13 @@ export class AdminServiceImpl implements AdminService{
 
 
     async getAdmin(email: string, password: string): Promise<Admin | undefined> {
-        const admin = await this.adminRepository.getAdmin(email, password)
-        if(admin == undefined){
-            throw new AdminNotExists()
-        }
-        else {
-            return admin
+        if (await checkMissingFields([email, password])) {
+            const admin = await this.adminRepository.getAdmin(email, password)
+            if (admin == undefined) {
+                throw new AdminNotExists()
+            } else {
+                return admin
+            }
         }
     }
 

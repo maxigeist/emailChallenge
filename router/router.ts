@@ -1,9 +1,7 @@
 import {userRouter} from "../routes/user.route";
 import {adminRouter} from "../routes/admin.route";
-import {sendgridRouter} from "../routes/sendgrid.route"
 import express from "express";
-import {mailgunRouter} from "../routes/mailgun.route";
-
+import {compoundMailRouter} from "../routes/compound.mail.route";
 
 
 
@@ -13,4 +11,4 @@ router.use("/user", userRouter)
 
 router.use("/admin", adminRouter)
 
-router.use("/email", sendgridRouter)
+router.use("/email", compoundMailRouter)

@@ -9,7 +9,7 @@ import prismaDb from "../db/db";
 export const mailgunRouter = Router()
 
 const emailRepository = new EmailRepositoryImpl(prismaDb)
-const mailgunService = new MailgunService(emailRepository)
+const mailgunService = new MailgunService(emailRepository, 2)
 const mailgunController = new EmailControllerImpl(mailgunService)
 
 mailgunRouter.post("/send", authenticateToken, async (req, res) => {
