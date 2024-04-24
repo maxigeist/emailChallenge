@@ -15,6 +15,7 @@ import {InternalServer} from "../error/internal.server";
 beforeAll(() => {
     process.env.TOKEN_SECRET = 'nendoanepacene902394iocniampoemce22d2n';
     process.env.MAIL_LIMIT='0'
+    process.env.TOKEN_LIMIT='1d'
 });
 
 test('should create a new mail', async () => {
@@ -78,6 +79,8 @@ describe("User log in and email sending", () => {
                 email:"hello@prisma.io",
                 password:"password"
             });
+        console.log(userLogin)
+
         expect(userLogin.statusCode).toEqual(200)
         const res = await request(app).post("/api/email/send").send(
             {
