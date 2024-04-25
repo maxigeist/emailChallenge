@@ -22,7 +22,7 @@ export class RetryLimitReached implements Error, ExtendedError{
     }
 
     getStatus(): number {
-        return 400;
+        return 410;
     }
 
 }
