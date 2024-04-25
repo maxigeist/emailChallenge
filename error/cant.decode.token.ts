@@ -1,15 +1,17 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class NotValidCredentials implements Error, ExtendedError{
 
-    name: string;
+export class CantDecodeToken implements Error, ExtendedError{
+
     message: string;
-    stack?: string | undefined;
-    
-    constructor (){
-        this.name = "Not valid credentials"
-        this.message = "The credentials do not match any existing user"
+    name: string;
+
+
+    constructor() {
+        this.message = "The token is not valid or there is no token present"
+        this.name = "Could not decode the token"
     }
+
 
     getAsJson(): { status: number; success: boolean; message: string } {
         return {
@@ -20,8 +22,7 @@ export class NotValidCredentials implements Error, ExtendedError{
     }
 
     getStatus(): number {
-        return 403;
+        return 400;
     }
-
 
 }

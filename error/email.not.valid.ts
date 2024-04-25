@@ -1,14 +1,13 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class NotValidCredentials implements Error, ExtendedError{
+export class EmailNotValid implements Error, ExtendedError{
 
     name: string;
     message: string;
-    stack?: string | undefined;
-    
+
     constructor (){
-        this.name = "Not valid credentials"
-        this.message = "The credentials do not match any existing user"
+        this.name = "Email is not valid"
+        this.message = "This is not a valid email address"
     }
 
     getAsJson(): { status: number; success: boolean; message: string } {
@@ -20,8 +19,7 @@ export class NotValidCredentials implements Error, ExtendedError{
     }
 
     getStatus(): number {
-        return 403;
+        return 405;
     }
-
 
 }
