@@ -3,7 +3,6 @@ import {AdminRepositoryImpl} from "../admin/admin.repository";
 import {AdminControllerImpl} from "../admin/admin.controller";
 import {AdminServiceImpl} from "../admin/admin.service";
 import prismaDb from "../db/db";
-import {AdminNotExists} from "../error/admin.not.exists";
 import {authenticateToken} from "../token/token";
 
 

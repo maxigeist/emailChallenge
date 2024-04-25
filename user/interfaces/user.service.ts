@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import { UserRepository } from "../interfaces/user.repository";
+import { UserRepository } from "./user.repository";
 
 export interface UserService{
     userRepository: UserRepository;

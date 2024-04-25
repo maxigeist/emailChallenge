@@ -16,7 +16,7 @@ export class AdminControllerImpl implements AdminController {
     async getAdmin(req: Request, res: Response) {
         try {
             const {email, password} = req.body
-            const admin = await this.adminService.getAdmin(email, password)
+            await this.adminService.getAdmin(email, password)
             res.status(200).json(
                 {
                     status:200,
@@ -32,7 +32,7 @@ export class AdminControllerImpl implements AdminController {
         try{
             const tokenUnwrap = decodeUserToken(req.headers['authorization'])
             const {date, email} = req.body
-            //This call is to check if this credentials are valid for an admin, if we can find a record in admin that matches this
+            //This call is to check if these credentials are valid for an admin, if we can find a record in admin that matches this
             await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
             const usersWithMailAmount = await this.adminService.getStats(date, email)
             res.status(200).json({
@@ -45,7 +45,6 @@ export class AdminControllerImpl implements AdminController {
             returnRes(error, res)
         }
     }
-
 
 
 }

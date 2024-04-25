@@ -3,7 +3,6 @@ import {UserRepository} from "./interfaces/user.repository"
 import {EmailExistsError} from "../error/email.exists";
 import {NotValidCredentials} from "../error/not.valid.credentials";
 import {User} from "@prisma/client";
-import {MissingFields} from "../error/missing.fields";
 import {checkMissingFields} from "../utils/check.missing.fields";
 import {checkValidEmail} from "../utils/check.valid.email";
 

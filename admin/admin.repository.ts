@@ -1,5 +1,5 @@
 import {AdminRepository} from "./interfaces/admin.repository";
-import {Admin, Prisma, PrismaClient} from "@prisma/client";
+import {Admin, PrismaClient} from "@prisma/client";
 
 
 
@@ -22,9 +22,6 @@ export class AdminRepositoryImpl implements AdminRepository {
         return admin ? admin : undefined;
     }
 
-    async getAllUsers() {
-        return []
-    }
 
     async getUserMailsByDate(date: Date, email?: string) {
         return this.prismaClient.user.findMany({
@@ -40,6 +37,9 @@ export class AdminRepositoryImpl implements AdminRepository {
                             gte: date,
                             lte: date,
                         }
+                    },
+                    select:{
+                        id:true
                     }
                 }
             }

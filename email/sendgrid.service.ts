@@ -1,12 +1,8 @@
 import {EmailService} from "./interfaces/email.service";
 import {EmailRepository} from "./interfaces/email.repository";
-import sgMail, {send} from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 import {Email} from "./type/email.type";
-import {checkEmailLimit} from "../utils/check.email.limit";
-import {Retry} from "./interfaces/retry";
-import * as console from "node:console";
 import {RetryLimitReached} from "../error/retry.limit.reached";
-import {checkMissingFields} from "../utils/check.missing.fields";
 
 
 export class SendGridService implements EmailService{
@@ -21,9 +17,6 @@ export class SendGridService implements EmailService{
     }
 
     async sendEmail(senderEmail:string, senderId:number, forwardEmail:string, subject:string, body:string): Promise<boolean> {
-        if (await checkMissingFields([senderEmail, senderId as unknown as string, forwardEmail])) {
-
-
             for (let i = 0; i < this.amountOfTries; i++) {
                 try {
                     const emailType: Email = {
@@ -36,13 +29,8 @@ export class SendGridService implements EmailService{
                     await this.emailRepository.register(senderId, forwardEmail, subject, body)
                     return true
                 } catch (error) {
-                    console.error(error)
                 }
             }
             throw new RetryLimitReached()
-
-        }
-        return false
     }
-
 }

@@ -1,4 +1,4 @@
-import jwt, {TokenExpiredError} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import {Request, Response} from "express";
 import {CantDecodeToken} from "../error/cant.decode.token";
 

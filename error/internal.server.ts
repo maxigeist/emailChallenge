@@ -1,6 +1,6 @@
 import {ExtendedError} from "./interface/extended.error";
 
-export class InternalServer implements Error{
+export class InternalServer implements Error, ExtendedError{
     message: string;
     name: string;
 

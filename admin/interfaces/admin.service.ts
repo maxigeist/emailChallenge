@@ -1,4 +1,4 @@
-import {Admin, Email} from "@prisma/client";
+import {Admin} from "@prisma/client";
 import {AdminRepository} from "./admin.repository";
 import {UserMailAmount} from "../admin.service";
 
