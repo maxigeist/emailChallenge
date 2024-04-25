@@ -11,6 +11,15 @@
       "description": ""
     }
   ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
   "paths": {
     "/api/user/register": {
       "post": {
@@ -226,31 +235,23 @@
         "description": "Get the amount of mails sent in a day by a user",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "2014-04-17"
+            },
+            "description": "Date for which to retrieve email statistics (optional, is there is no date provided it is going to use today's date)"
+          },
+          {
+            "name": "email",
+            "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Email address of the user (optional, is there is no email provided it will bring all the users that sent mails that day)"
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "date": {
-                    "example": "2014-04-17"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "The stats were collected correctly",
@@ -265,23 +266,35 @@
                     },
                     "success": {
                       "type": "boolean",
-                      "example": "true"
+                      "example": true
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successful login"
+                      "example": "Got the users with their mail amount for the day"
                     },
                     "data": {
-                      "type": "object",
-                      "example": "[{\n            \"email\": \"hello@gmail.com\",\n            \"mailAmount\": 3\n        } ]"
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "example": "hello@gmail.com"
+                          },
+                          "mailAmount": {
+                            "type": "number",
+                            "example": 3
+                          }
+                        }
+                      }
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Missing credentials",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -289,7 +302,7 @@
                   "properties": {
                     "status": {
                       "type": "number",
-                      "example": 400
+                      "example": 401
                     },
                     "success": {
                       "type": "boolean",
@@ -297,7 +310,31 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "This request is missing some fields"
+                      "example": "The token couldn't be authenticated, either the token has expired or the token is not valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 403
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "This credentials don't match a valid admin"
                     }
                   }
                 }
@@ -307,9 +344,17 @@
           "default": {
             "description": "This endpoint is used to login a user"
           }
-        }
+        },
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
+
     },
+
     "/api/email/send": {
       "post": {
         "description": "",
@@ -325,16 +370,37 @@
         "responses": {
           "401": {
             "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "This request is missing some fields"
+                    }
+                  }
+                }
+              }
+            }
           }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   }

@@ -31,7 +31,8 @@ export class AdminControllerImpl implements AdminController {
     async getStats(req: Request, res: Response) {
         try{
             const tokenUnwrap = decodeUserToken(req.headers['authorization'])
-            const {date, email} = req.body
+            const date = req.query.date as string;
+            const email = req.query.email as string;
             //This call is to check if these credentials are valid for an admin, if we can find a record in admin that matches this
             await this.adminService.getAdmin(tokenUnwrap.email, tokenUnwrap.password)
             const usersWithMailAmount = await this.adminService.getStats(date, email)
