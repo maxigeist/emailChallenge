@@ -46,9 +46,22 @@ This repository contains a solution to the Email Service Challenge, which aims t
 4. Run migrations using `npm run migrate`.
 5. Start the application using `npm start`.
 
+
+## .env file structure
+- **DATABASE_URL**
+- **PGADMIN_DEFAULT_EMAIL**
+- **TOKEN_SECRET**
+- **SENDGRID_API_KEY**
+- **MAILGUN_API_KEY**
+- **MAILGUN_MAILER_DOMAIN**
+- **MAIL_LIMIT**
+- **TOKEN_LIMIT**
+
+
 ## Testing
 
 Run tests using:
 
 ```bash
 npm test
+
