@@ -23,7 +23,6 @@
   "paths": {
     "/api/user/register": {
       "post": {
-        "summary": "Register a new user",
         "requestBody": {
           "required": true,
           "content": {
@@ -143,6 +142,30 @@
               }
             }
           },
+          "409": {
+            "description": "The length of the username and password are wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 409
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The length of the username has to have at least 2 characters and the length of the password has to have at least 8 characters."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "default": {
             "description": "This endpoint is used to register a user"
           }
@@ -151,7 +174,6 @@
     },
     "/api/user/login": {
       "post": {
-        "summary": "Log in a user",
         "requestBody": {
           "required": true,
           "content": {
@@ -358,18 +380,76 @@
     "/api/email/send": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "forwardEmail": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": ["forwardEmail"]
+              }
             }
           }
-        ],
+        },
         "responses": {
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The token couldn't be authenticated, either the token has expired or the token is not valid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The email was sent correctly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The email was sent correctly"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing credentials",
@@ -389,6 +469,30 @@
                     "message": {
                       "type": "string",
                       "example": "This request is missing some fields"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Service tries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 410
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The amount of tries for this service was reached"
                     }
                   }
                 }
